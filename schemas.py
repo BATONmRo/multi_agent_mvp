@@ -16,3 +16,13 @@ class ValidationOutput(BaseModel):
     valid: bool
     issues: List[str]
     suggestions: List[str]
+
+class PipelineResult(BaseModel):
+    input_task: str
+    route: RouteAgentOutput
+    validation: ValidationOutput
+    final_status: str
+
+class BaselineOutput(BaseModel):
+    task: str
+    answer: str
