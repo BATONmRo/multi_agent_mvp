@@ -1,6 +1,8 @@
 
 from pydantic import BaseModel
 from typing import List
+from typing import Any
+
 
 class RouteStep(BaseModel):
     reaction: str
@@ -19,8 +21,10 @@ class ValidationOutput(BaseModel):
 
 class PipelineResult(BaseModel):
     input_task: str
-    route: RouteAgentOutput
-    validation: ValidationOutput
+    route: Any
+    validation: Any
+    methods_result: dict | None = None
+    reagents_result: dict | None = None
     final_status: str
 
 class BaselineOutput(BaseModel):
