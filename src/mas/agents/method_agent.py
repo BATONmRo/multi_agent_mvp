@@ -1,32 +1,40 @@
-from mas.agents.base import BaseAgent
-from mas.contracts import AgentResponse
-from mas.state import PipelineState
+from prompts import chat_json
 
+def run(self, state: PipelineState) -> AgentResponse:
+    route = state.data.get("route")
 
-class MethodAgent(BaseAgent):
-    name = "method"
-
-    def run(self, state: PipelineState) -> AgentResponse:
-        route = state.data.get("route")
-
-        if not route:
-            return {
-                "status": "fail",
-                "result": {},
-                "reason": "No route found in state",
-            }
-
-        method_result = {
-            "route_used": route.get("route_summary", ""),
-            "method_summary": "Retrieved demo methodology from local corpus",
-            "references": [
-                "demo_doc_001",
-                "demo_doc_002",
-            ],
-        }
-
+    if not route:
         return {
-            "status": "ok",
-            "result": method_result,
-            "reason": "Methodology retrieved successfully",
+            "status": "fail",
+            "result": {},
+            "reason": "No route found in state",
         }
+
+    system_prompt = """
+You are a synthesis method expert.
+Return ONLY valid JSON.
+
+Format:
+{
+  "status": "ok",
+  "result": {
+    "route_used": "...",
+    "method_summary": "...",
+    "references": ["...", "..."]
+  },
+  "reason": "..."
+}
+"""
+
+    user_prompt = f"Route: {route}"
+
+    result = chat_json(system_prompt, user_prompt)
+
+    if "status" not in result:
+        return {
+            "status": "fail",
+            "result": {"raw": result},
+            "reason": "Invalid model response",
+        }
+
+    return result

@@ -1,33 +1,40 @@
-from mas.agents.base import BaseAgent
-from mas.contracts import AgentResponse
-from mas.state import PipelineState
+from prompts import chat_json
 
+def run(self, state: PipelineState) -> AgentResponse:
+    method = state.data.get("method")
 
-class ReagentAgent(BaseAgent):
-    name = "reagent"
-
-    def run(self, state: PipelineState) -> AgentResponse:
-        method = state.data.get("method")
-
-        if not method:
-            return {
-                "status": "fail",
-                "result": {},
-                "reason": "No method found in state",
-            }
-
-        reagent_check = {
-            "availability": "ok",
-            "checked_items": [
-                "Pd catalyst",
-                "base",
-                "solvent",
-            ],
-            "notes": "Demo reagent check passed",
-        }
-
+    if not method:
         return {
-            "status": "ok",
-            "result": reagent_check,
-            "reason": "Reagents validated successfully",
+            "status": "fail",
+            "result": {},
+            "reason": "No method found",
         }
+
+    system_prompt = """
+You are a reagent validation agent.
+Return ONLY valid JSON.
+
+Format:
+{
+  "status": "ok",
+  "result": {
+    "availability": "ok",
+    "checked_items": ["...", "..."],
+    "notes": "..."
+  },
+  "reason": "..."
+}
+"""
+
+    user_prompt = f"Method: {method}"
+
+    result = chat_json(system_prompt, user_prompt)
+
+    if "status" not in result:
+        return {
+            "status": "fail",
+            "result": {"raw": result},
+            "reason": "Invalid model response",
+        }
+
+    return result
