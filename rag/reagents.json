@@ -1,0 +1,56 @@
+[
+  {
+    "name": "салициловая кислота",
+    "synonyms": ["salicylic acid", "2-hydroxybenzoic acid"],
+    "hazard_level": "low",
+    "hazard_tags": ["irritant"],
+    "description": "Слабый раздражитель, требует стандартных средств защиты.",
+    "storage": "Хранить в сухом месте при комнатной температуре.",
+    "ppe": ["gloves", "goggles"]
+  },
+  {
+    "name": "уксусный ангидрид",
+    "synonyms": ["acetic anhydride"],
+    "hazard_level": "medium",
+    "hazard_tags": ["corrosive", "irritant", "reactive_with_water"],
+    "description": "Коррозионный и раздражающий реагент, гидролизуется с образованием уксусной кислоты.",
+    "storage": "Хранить герметично, избегать контакта с влагой.",
+    "ppe": ["gloves", "goggles", "fume_hood"]
+  },
+  {
+    "name": "серная кислота",
+    "synonyms": ["sulfuric acid", "H2SO4"],
+    "hazard_level": "high",
+    "hazard_tags": ["strongly_corrosive", "exothermic_with_water"],
+    "description": "Сильно коррозионная кислота, вызывает ожоги, при смешении с водой выделяет тепло.",
+    "storage": "Хранить в кислотостойкой таре.",
+    "ppe": ["acid_gloves", "goggles", "lab_coat", "fume_hood"]
+  },
+  {
+    "name": "фосфорная кислота",
+    "synonyms": ["phosphoric acid", "H3PO4"],
+    "hazard_level": "medium",
+    "hazard_tags": ["corrosive"],
+    "description": "Коррозионная кислота, менее агрессивная, чем серная.",
+    "storage": "Хранить герметично.",
+    "ppe": ["gloves", "goggles"]
+  },
+  {
+    "name": "ацетилхлорид",
+    "synonyms": ["acetyl chloride"],
+    "hazard_level": "high",
+    "hazard_tags": ["corrosive", "fuming", "toxic_inhalation", "reactive_with_water"],
+    "description": "Летучий реагент, дымит на воздухе, выделяет HCl, опасен при вдыхании.",
+    "storage": "Хранить в сухих условиях, герметично.",
+    "ppe": ["fume_hood", "gloves", "goggles"]
+  },
+  {
+    "name": "пиридин",
+    "synonyms": ["pyridine"],
+    "hazard_level": "high",
+    "hazard_tags": ["toxic", "flammable", "irritant"],
+    "description": "Токсичное и горючее основание с резким запахом.",
+    "storage": "Хранить вдали от источников огня.",
+    "ppe": ["gloves", "goggles", "fume_hood"]
+  }
+]

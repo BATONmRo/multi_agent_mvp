@@ -1,0 +1,78 @@
+[
+  {
+    "target": "ацетилсалициловая кислота",
+    "target_synonyms": ["аспирин", "acetylsalicylic acid", "aspirin"],
+    "route_id": "aspirin_route_1",
+    "title": "Ацетилирование салициловой кислоты уксусным ангидридом",
+    "starting_materials": ["салициловая кислота"],
+    "reaction_type": "acetylation",
+    "steps": [
+      {
+        "step_id": 1,
+        "description": "Ацетилирование фенольной группы салициловой кислоты уксусным ангидридом",
+        "reagents": ["салициловая кислота", "уксусный ангидрид", "серная кислота"],
+        "conditions": ["60-80C", "acid catalyst", "15-30 min"]
+      }
+    ],
+    "expected_products": ["ацетилсалициловая кислота"],
+    "byproducts": ["уксусная кислота"],
+    "advantages": [
+      "простой и широко используемый метод",
+      "хорошо контролируемый процесс"
+    ],
+    "disadvantages": [
+      "использование коррозионных реагентов",
+      "требуется нагрев"
+    ],
+    "safety_tags": ["corrosive", "exotherm", "heated_process"],
+    "preferred_for_mvp": true
+  },
+  {
+    "target": "ацетилсалициловая кислота",
+    "target_synonyms": ["аспирин", "acetylsalicylic acid", "aspirin"],
+    "route_id": "aspirin_route_2",
+    "title": "Ацетилирование салициловой кислоты ацетилхлоридом",
+    "starting_materials": ["салициловая кислота"],
+    "reaction_type": "acetylation",
+    "steps": [
+      {
+        "step_id": 1,
+        "description": "Ацетилирование салициловой кислоты ацетилхлоридом в присутствии основания",
+        "reagents": ["салициловая кислота", "ацетилхлорид", "пиридин"],
+        "conditions": ["room_temperature", "dry_conditions", "30-60 min"]
+      }
+    ],
+    "expected_products": ["ацетилсалициловая кислота"],
+    "byproducts": ["HCl"],
+    "advantages": [
+      "может протекать без нагрева"
+    ],
+    "disadvantages": [
+      "выделение HCl",
+      "токсичные и летучие реагенты"
+    ],
+    "safety_tags": ["corrosive", "toxic", "gas_evolution", "flammable"],
+    "preferred_for_mvp": false
+  },
+  {
+    "reaction": "Suzuki coupling",
+    "conditions": "Pd catalyst, base, solvent, 80C",
+    "yield": "80-95%",
+    "substrates": ["aryl halide", "boronic acid"],
+    "reagents": ["Pd(PPh3)4", "K2CO3", "THF"]
+  },
+  {
+    "reaction": "Friedel-Crafts alkylation",
+    "conditions": "AlCl3 catalyst, room temperature",
+    "yield": "60-80%",
+    "substrates": ["benzene", "alkyl halide"],
+    "reagents": ["AlCl3", "benzene", "alkyl halide"]
+  },
+  {
+    "reaction": "Amide coupling",
+    "conditions": "EDC/HOBt or DCC, base, DMF",
+    "yield": "70-90%",
+    "substrates": ["carboxylic acid", "amine"],
+    "reagents": ["EDC", "HOBt", "DIPEA", "DMF"]
+  }
+]
