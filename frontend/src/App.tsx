@@ -1,25 +1,59 @@
 import { useEffect, useRef, useState } from "react";
-import { generateMockRun } from "./mock_run";
 
 type Message = {
   role: "user" | "assistant";
   text: string;
 };
 
-type PipelineTab = "route" | "validator" | "result";
+type PipelineTab =
+  | "task_parser"
+  | "route"
+  | "methods"
+  | "reagents"
+  | "safety"
+  | "result";
+
 type Status = "idle" | "running" | "completed" | "failed";
 
 type RunState = {
   status: Status;
+  task_parser: {
+    status: Status;
+    task_type: string;
+    target: string;
+    starting_materials: string[];
+    confidence: number;
+  };
   route: {
     status: Status;
-    selected_path: string;
-    reasoning: string;
+    target: string;
+    route_count: number;
+    confidence: number;
+    routes: {
+      id: string;
+      summary: string;
+    }[];
   };
-  validator: {
+  methods: {
     status: Status;
-    is_valid: boolean;
-    comment: string;
+    results: string[];
+    message: string;
+  };
+  reagents: {
+    status: Status;
+    results: string[];
+    message: string;
+  };
+  safety: {
+    status: Status;
+    overall_assessment: string;
+    recommended_route_id: string;
+    route_assessments: {
+      route_id: string;
+      risk_level: string;
+      score: number;
+      justification: string;
+    }[];
   };
   result: {
     final_answer: string;
@@ -28,15 +62,35 @@ type RunState = {
 
 const initialRun: RunState = {
   status: "idle",
+  task_parser: {
+    status: "idle",
+    task_type: "—",
+    target: "—",
+    starting_materials: [],
+    confidence: 0,
+  },
   route: {
     status: "idle",
-    selected_path: "—",
-    reasoning: "Ожидание запроса.",
+    target: "—",
+    route_count: 0,
+    confidence: 0,
+    routes: [],
   },
-  validator: {
+  methods: {
     status: "idle",
-    is_valid: false,
-    comment: "Ожидание проверки.",
+    results: [],
+    message: "Ожидание запроса.",
+  },
+  reagents: {
+    status: "idle",
+    results: [],
+    message: "Ожидание запроса.",
+  },
+  safety: {
+    status: "idle",
+    overall_assessment: "—",
+    recommended_route_id: "—",
+    route_assessments: [],
   },
   result: {
     final_answer: "Введите запрос, чтобы запустить pipeline.",
@@ -45,7 +99,7 @@ const initialRun: RunState = {
 
 export default function App() {
   const [input, setInput] = useState("");
-  const [activeTab, setActiveTab] = useState<PipelineTab>("route");
+  const [activeTab, setActiveTab] = useState<PipelineTab>("task_parser");
   const [run, setRun] = useState<RunState>(initialRun);
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -63,107 +117,177 @@ export default function App() {
   }, [messages]);
 
   const getTabStatus = (tab: PipelineTab) => {
+    if (tab === "task_parser") return run.task_parser.status;
     if (tab === "route") return run.route.status;
-    if (tab === "validator") return run.validator.status;
+    if (tab === "methods") return run.methods.status;
+    if (tab === "reagents") return run.reagents.status;
+    if (tab === "safety") return run.safety.status;
     return run.status;
   };
 
-  const handleSend = () => {
-    if (!input.trim()) return;
+  const handleSend = async () => {
+  if (!input.trim()) return;
 
-    const query = input.trim();
+  const query = input.trim();
 
-    setMessages((prev) => [...prev, { role: "user", text: query }]);
-    setInput("");
-    setActiveTab("route");
+  setMessages((prev) => [...prev, { role: "user", text: query }]);
+  setInput("");
+  setActiveTab("task_parser");
+
+  try {
+    const response = await fetch("http://127.0.0.1:8000/run", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ query }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error ${response.status}`);
+    }
+
+    const data = await response.json();
 
     setRun({
-      status: "running",
-      route: {
-        status: "running",
-        selected_path: "Определяется...",
-        reasoning: "Route Agent анализирует запрос.",
+      status: "completed",
+      task_parser: {
+        status: "completed",
+        task_type: data.task_parser?.task_type ?? "—",
+        target: data.task_parser?.target ?? "—",
+        starting_materials: data.task_parser?.starting_materials ?? [],
+        confidence: data.task_parser?.confidence ?? 0,
       },
-      validator: {
-        status: "idle",
-        is_valid: false,
-        comment: "Ожидание этапа валидации.",
+      route: {
+        status: "completed",
+        target: data.route?.target ?? "—",
+        route_count: data.route?.route_count ?? 0,
+        confidence: data.route?.confidence ?? 0,
+        routes: (data.route?.routes ?? []).map((r: any) => ({
+          id: r.id,
+          summary: r.summary,
+        })),
+      },
+      methods: {
+        status: "completed",
+        results: (data.methods?.methods_found ?? []).map((m: any) => m.reaction),
+        message: data.methods?.message ?? "ok",
+      },
+      reagents: {
+        status: "completed",
+        results: data.reagents?.checked ?? [],
+        message:
+          data.reagents?.issues?.length > 0
+            ? `Найдено проблем: ${data.reagents.issues.length}`
+            : "Проблем не обнаружено",
+      },
+      safety: {
+        status: "completed",
+        overall_assessment: data.safety?.overall_assessment ?? "—",
+        recommended_route_id: data.safety?.recommended_route_id ?? "—",
+        route_assessments: (data.safety?.route_assessments ?? []).map((item: any) => ({
+          route_id: item.route_id,
+          risk_level: item.risk_level,
+          score: item.score,
+          justification: item.justification,
+        })),
       },
       result: {
-        final_answer: "Формирование ответа...",
+        final_answer: data.result?.final_answer ?? "Нет ответа",
       },
     });
 
-    const simulated = generateMockRun(query);
+    setMessages((prev) => [
+      ...prev,
+      {
+        role: "assistant",
+        text: data.result?.final_answer ?? "Нет ответа от backend.",
+      },
+    ]);
 
-    setTimeout(() => {
-      setRun((prev) => ({
-        ...prev,
-        route: {
-          status: "completed",
-          selected_path: simulated.route.selected_path,
-          reasoning: simulated.route.reasoning,
-        },
-        validator: {
-          ...prev.validator,
-          status: "running",
-          comment: "Validator Agent проверяет результат.",
-        },
-      }));
-      setActiveTab("validator");
-    }, 900);
-
-    setTimeout(() => {
-      setRun({
-        status: simulated.status as Status,
-        route: {
-          status: simulated.route.status as Status,
-          selected_path: simulated.route.selected_path,
-          reasoning: simulated.route.reasoning,
-        },
-        validator: {
-          status: simulated.validator.status as Status,
-          is_valid: simulated.validator.is_valid,
-          comment: simulated.validator.comment,
-        },
-        result: {
-          final_answer: simulated.result.final_answer,
-        },
-      });
-      setActiveTab("result");
-
-      setMessages((prev) => [
-        ...prev,
-        { role: "assistant", text: simulated.result.final_answer },
-      ]);
-    }, 1800);
-  };
+    setActiveTab("result");
+  } catch (error) {
+    console.error(error);
+  }
+};
 
   const renderPipelineContent = () => {
-    if (activeTab === "route") {
+    if (activeTab === "task_parser") {
       return (
-        <div className="pipeline-details fade-in">
-          <h3>Route Agent</h3>
-          <p><strong>Status:</strong> {run.route.status}</p>
-          <p><strong>Selected path:</strong> {run.route.selected_path}</p>
-          <p><strong>Reasoning:</strong> {run.route.reasoning}</p>
+        <div className="pipeline-details">
+          <h3>Task Parser</h3>
+          <p><strong>Status:</strong> {run.task_parser.status}</p>
+          <p><strong>Task type:</strong> {run.task_parser.task_type}</p>
+          <p><strong>Target:</strong> {run.task_parser.target}</p>
+          <p><strong>Starting materials:</strong> {run.task_parser.starting_materials.join(", ") || "—"}</p>
+          <p><strong>Confidence:</strong> {run.task_parser.confidence}</p>
         </div>
       );
     }
 
-    if (activeTab === "validator") {
+    if (activeTab === "route") {
       return (
-        <div className="pipeline-details fade-in">
-          <h3>Validator Agent</h3>
-          <p><strong>Status:</strong> {run.validator.status}</p>
-          <p><strong>Valid:</strong> {String(run.validator.is_valid)}</p>
-          <p><strong>Comment:</strong> {run.validator.comment}</p>
+        <div className="pipeline-details">
+          <h3>Route Agent</h3>
+          <p><strong>Status:</strong> {run.route.status}</p>
+          <p><strong>Target:</strong> {run.route.target}</p>
+          <p><strong>Route count:</strong> {run.route.route_count}</p>
+          <p><strong>Confidence:</strong> {run.route.confidence}</p>
+
+          {run.route.routes.map((route) => (
+            <div key={route.id} style={{ marginTop: "12px" }}>
+              <p><strong>Route ID:</strong> {route.id}</p>
+              <p><strong>Summary:</strong> {route.summary}</p>
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    if (activeTab === "methods") {
+      return (
+        <div className="pipeline-details">
+          <h3>Methods Agent</h3>
+          <p><strong>Status:</strong> {run.methods.status}</p>
+          <p><strong>Results count:</strong> {run.methods.results.length}</p>
+          <p><strong>Message:</strong> {run.methods.message || "—"}</p>
+        </div>
+      );
+    }
+
+    if (activeTab === "reagents") {
+      return (
+        <div className="pipeline-details">
+          <h3>Reagents Agent</h3>
+          <p><strong>Status:</strong> {run.reagents.status}</p>
+          <p><strong>Results count:</strong> {run.reagents.results.length}</p>
+          <p><strong>Message:</strong> {run.reagents.message || "—"}</p>
+        </div>
+      );
+    }
+
+    if (activeTab === "safety") {
+      return (
+        <div className="pipeline-details">
+          <h3>Safety Agent</h3>
+          <p><strong>Status:</strong> {run.safety.status}</p>
+          <p><strong>Overall assessment:</strong> {run.safety.overall_assessment}</p>
+          <p><strong>Recommended route:</strong> {run.safety.recommended_route_id || "—"}</p>
+
+          {run.safety.route_assessments.map((item) => (
+            <div key={item.route_id} style={{ marginTop: "12px" }}>
+              <p><strong>Route ID:</strong> {item.route_id}</p>
+              <p><strong>Risk level:</strong> {item.risk_level}</p>
+              <p><strong>Score:</strong> {item.score}</p>
+              <p><strong>Justification:</strong> {item.justification}</p>
+            </div>
+          ))}
         </div>
       );
     }
 
     return (
-      <div className="pipeline-details fade-in">
+      <div className="pipeline-details">
         <h3>Result</h3>
         <p><strong>Status:</strong> {run.status}</p>
         <p><strong>Final answer:</strong> {run.result.final_answer}</p>
@@ -185,8 +309,11 @@ export default function App() {
 
             <div className="pipeline-buttons">
               {[
+                { key: "task_parser", label: "Task Parser" },
                 { key: "route", label: "Route Agent" },
-                { key: "validator", label: "Validator Agent" },
+                { key: "methods", label: "Methods Agent" },
+                { key: "reagents", label: "Reagents Agent" },
+                { key: "safety", label: "Safety Agent" },
                 { key: "result", label: "Result" },
               ].map((tab) => {
                 const currentTab = tab.key as PipelineTab;
@@ -218,9 +345,7 @@ export default function App() {
               })}
             </div>
 
-            <div className="pipeline-card">
-              {renderPipelineContent()}
-            </div>
+            <div className="pipeline-card">{renderPipelineContent()}</div>
           </aside>
 
           <section className="chat-section">
