@@ -74,11 +74,11 @@ def run_pipeline(task: str) -> PipelineResult:
 
     overall = safety_result.overall_assessment.lower()
 
-    if "low" in overall:
+    if "low" in overall or "низ" in overall:
         final_status = "accepted"
-    elif "medium" in overall:
+    elif "medium" in overall or "сред" in overall:
         final_status = "review_required"
-    elif "high" in overall:
+    elif "high" in overall or "высок" in overall or "опас" in overall:
         final_status = "risky"
     else:
         final_status = "unknown"
@@ -95,12 +95,11 @@ def run_pipeline(task: str) -> PipelineResult:
 
 
 def main():
-    task = "Предложи возможные маршруты синтеза аспирина из салициловой кислоты, оцени их безопасность и выбери наиболее безопасный"
 
-    # task = input("Введите задачу синтеза: ").strip()
-    # if not task:
-    #     print("Пустая задача. Завершение.")
-    #     return
+    task = input("Введите задачу синтеза: ").strip()
+    if not task:
+       print("Пустая задача. Завершение.")
+       return
 
     print("=== BASELINE ===")
     baseline_result = baseline_agent(task)
