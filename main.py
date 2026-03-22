@@ -1,3 +1,4 @@
+import json
 from agents import (
     task_parser_agent,
     route_agent,
@@ -5,8 +6,10 @@ from agents import (
     baseline_agent,
     methods_agent,
     reagents_agent,
+    run_judge,
 )
 from schemas import PipelineResult
+from llm import client
 
 
 def extract_all_reagents(route_result) -> list[str]:
@@ -93,7 +96,7 @@ def run_pipeline(task: str) -> PipelineResult:
 
 def main():
     task = "Предложи возможные маршруты синтеза аспирина из салициловой кислоты, оцени их безопасность и выбери наиболее безопасный"
-    
+
     # task = input("Введите задачу синтеза: ").strip()
     # if not task:
     #     print("Пустая задача. Завершение.")
@@ -109,6 +112,29 @@ def main():
     print("\n=== FINAL PIPELINE RESULT ===")
     print(pipeline_result.model_dump_json(indent=2, ensure_ascii=False))
 
+    print("\n=== JUDGE EVALUATION ===")
+
+    baseline_text = baseline_result.answer
+
+    pipeline_text = json.dumps(
+        {
+            "routes": pipeline_result.route.model_dump(),
+            "safety": pipeline_result.safety.model_dump(),
+            "final_status": pipeline_result.final_status,
+        },
+        ensure_ascii=False,
+        indent=2
+    )
+
+    judge_result = run_judge(
+        llm_client=client,
+        task=task,
+        baseline_answer=baseline_text,
+        mas_answer=pipeline_text,
+        reference_context=""
+    )
+
+    print(json.dumps(judge_result, indent=2, ensure_ascii=False))
 
 if __name__ == "__main__":
     main()
