@@ -2,7 +2,9 @@ import json
 import re
 from typing import Any, Dict, List, Optional, Union
 from tools import tool_find_methods, check_reagents
-from llm import call_llm, MODEL_NAME
+from memory import build_memory_summary
+
+from llm import call_llm
 from prompts import (
     TASK_PARSER_SYSTEM_PROMPT,
     ROUTE_AGENT_SYSTEM_PROMPT,
@@ -18,7 +20,6 @@ from schemas import (
     RouteCandidate,
     RouteStep,
 )
-from tools import tool_find_methods, check_reagents
 
 # ----------------------------
 # LLM as a judje
@@ -50,7 +51,7 @@ def run_judge(llm_client, task, baseline_answer, mas_answer, reference_context="
 
     try:
         response = llm_client.chat.completions.create(
-            model=MODEL_NAME,
+            model="openrouter/free",
             temperature=0,
             messages=[
                 {"role": "system", "content": PAIRWISE_JUDGE_SYSTEM_PROMPT},
@@ -59,8 +60,7 @@ def run_judge(llm_client, task, baseline_answer, mas_answer, reference_context="
         )
 
         raw = response.choices[0].message.content
-
-        return json.loads(raw)
+        return extract_json(raw)
 
     except Exception as e:
         print("[JUDGE ERROR]", e)
@@ -197,7 +197,7 @@ def task_parser_agent(task: str) -> TaskParserOutput:
         return _fallback_task_parser(task)
 
 
-def route_agent(parsed_task: Union[str, TaskParserOutput, dict]) -> RouteAgentOutput:
+def route_agent(parsed_task: Union[str, TaskParserOutput, dict], memory=None) -> RouteAgentOutput:
     """
     Генерирует 1 или несколько маршрутов синтеза в структурированном виде.
     Можно передать:
@@ -216,25 +216,46 @@ def route_agent(parsed_task: Union[str, TaskParserOutput, dict]) -> RouteAgentOu
             payload = parsed_task
             fallback_target = payload.get("target", "unknown_target")
 
+        if memory:
+            payload["memory_summary"] = build_memory_summary(memory)
+            payload["memory_context"] = {
+                "parsed_task": memory.get("parsed_task"),
+                "methods_result": memory.get("methods_result"),
+                "reagents_result": memory.get("reagents_result"),
+                "history": memory.get_history(),
+            }
+
         data = _safe_llm_json(ROUTE_AGENT_SYSTEM_PROMPT, payload)
-        return RouteAgentOutput(**data)
+        result = RouteAgentOutput(**data)
+
+        if memory:
+            memory.set("route_result", result.model_dump())
+            memory.add_event("route_agent", "success", result.model_dump())
+
+        return result
 
     except Exception as e:
         print(f"[route_agent ERROR] {e}")
-        return _fallback_route(fallback_target)
+        fallback = _fallback_route(fallback_target)
+
+        if memory:
+            memory.add_event("route_agent", "fallback", fallback.model_dump())
+
+        return fallback
 
 
 def safety_agent(
     route_result: RouteAgentOutput,
     methods_context: Optional[Any] = None,
     reagents_context: Optional[Any] = None,
+    memory=None,
 ) -> SafetyAssessmentOutput:
     """
     Оценивает маршрут(ы) по safety-критериям.
     На вход получает:
     - route_result
     - опционально methods_context из RAG/tool_find_methods
-    - opционально reagents_context из check_reagents
+    - опционально reagents_context из check_reagents
     """
     try:
         payload = {
@@ -243,12 +264,34 @@ def safety_agent(
             "reagents_context": reagents_context,
         }
 
+        if memory:
+            payload["memory_summary"] = build_memory_summary(memory)
+            payload["memory_context"] = {
+                "parsed_task": memory.get("parsed_task"),
+                "route_result": memory.get("route_result"),
+                "methods_result": memory.get("methods_result"),
+                "reagents_result": memory.get("reagents_result"),
+                "extracted_reagents": memory.get("extracted_reagents"),
+                "history": memory.get_history(),
+            }
+
         data = _safe_llm_json(SAFETY_AGENT_SYSTEM_PROMPT, payload)
-        return SafetyAssessmentOutput(**data)
+        result = SafetyAssessmentOutput(**data)
+
+        if memory:
+            memory.set("safety_result", result.model_dump())
+            memory.add_event("safety_agent", "success", result.model_dump())
+
+        return result
 
     except Exception as e:
         print(f"[safety_agent ERROR] {e}")
-        return _fallback_safety(route_result)
+        fallback = _fallback_safety(route_result)
+
+        if memory:
+            memory.add_event("safety_agent", "fallback", fallback.model_dump())
+
+        return fallback
 
 
 def validator_agent(route_result: RouteAgentOutput) -> SafetyAssessmentOutput:
