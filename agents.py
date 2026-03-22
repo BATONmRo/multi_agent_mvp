@@ -2,8 +2,7 @@ import json
 import re
 from typing import Any, Dict, List, Optional, Union
 from tools import tool_find_methods, check_reagents
-
-from llm import call_llm
+from llm import call_llm, MODEL_NAME
 from prompts import (
     TASK_PARSER_SYSTEM_PROMPT,
     ROUTE_AGENT_SYSTEM_PROMPT,
@@ -51,7 +50,7 @@ def run_judge(llm_client, task, baseline_answer, mas_answer, reference_context="
 
     try:
         response = llm_client.chat.completions.create(
-            model="gpt-4.1",
+            model=MODEL_NAME,
             temperature=0,
             messages=[
                 {"role": "system", "content": PAIRWISE_JUDGE_SYSTEM_PROMPT},

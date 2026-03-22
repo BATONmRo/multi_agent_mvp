@@ -52,5 +52,212 @@
     "description": "Токсичное и горючее основание с резким запахом.",
     "storage": "Хранить вдали от источников огня.",
     "ppe": ["gloves", "goggles", "fume_hood"]
+  },
+  {
+    "name": "ТФУ",
+    "synonyms": ["TFA", "trifluoroacetic acid"],
+    "hazard_level": "high",
+    "hazard_tags": ["strongly_corrosive", "volatile", "toxic_inhalation"],
+    "description": "Летучая сильная кислота, образует раздражающие пары, вызывает ожоги.",
+    "storage": "Хранить герметично в вытяжном шкафу или шкафу для кислот.",
+    "ppe": ["acid_gloves", "goggles", "lab_coat", "fume_hood"]
+  },
+  {
+    "name": "дихлорметан",
+    "synonyms": ["DCM", "dichloromethane", "methylene chloride"],
+    "hazard_level": "high",
+    "hazard_tags": ["toxic", "volatile", "toxic_inhalation"],
+    "description": "Летучий хлорированный растворитель, опасен при вдыхании паров.",
+    "storage": "Хранить плотно закрытым в хорошо вентилируемом месте.",
+    "ppe": ["gloves", "goggles", "fume_hood"]
+  },
+  {
+    "name": "ДМФ",
+    "synonyms": ["DMF", "dimethylformamide", "N,N-dimethylformamide"],
+    "hazard_level": "high",
+    "hazard_tags": ["toxic", "skin_absorption"],
+    "description": "Токсичный полярный растворитель, опасен при контакте с кожей и при вдыхании.",
+    "storage": "Хранить герметично, избегать перегрева.",
+    "ppe": ["gloves", "goggles", "fume_hood"]
+  },
+  {
+    "name": "ДИПЭА",
+    "synonyms": ["DIPEA", "N,N-diisopropylethylamine", "Hunig's base"],
+    "hazard_level": "medium",
+    "hazard_tags": ["corrosive", "irritant", "volatile"],
+    "description": "Летучее органическое основание с раздражающими парами.",
+    "storage": "Хранить герметично в хорошо вентилируемом месте.",
+    "ppe": ["gloves", "goggles", "fume_hood"]
+  },
+  {
+    "name": "ЭДК",
+    "synonyms": ["EDC", "EDC.HCl", "1-ethyl-3-(3-dimethylaminopropyl)carbodiimide"],
+    "hazard_level": "medium",
+    "hazard_tags": ["irritant"],
+    "description": "Карбодиимидный реагент для амидного связывания, раздражает кожу и слизистые.",
+    "storage": "Хранить в сухом месте, герметично.",
+    "ppe": ["gloves", "goggles"]
+  },
+  {
+    "name": "ГОБт",
+    "synonyms": ["HOBt", "1-hydroxybenzotriazole"],
+    "hazard_level": "high",
+    "hazard_tags": ["explosive_risk", "energetic_material", "irritant"],
+    "description": "Добавка для амидного связывания; сухая форма может представлять взрывоопасность.",
+    "storage": "Хранить по требованиям для потенциально энергетических материалов.",
+    "ppe": ["gloves", "goggles", "lab_coat"]
+  },
+  {
+    "name": "тетрагидрофуран",
+    "synonyms": ["THF", "tetrahydrofuran"],
+    "hazard_level": "medium",
+    "hazard_tags": ["flammable", "peroxide_forming", "volatile"],
+    "description": "Горючий эфирный растворитель, при длительном хранении может образовывать пероксиды.",
+    "storage": "Хранить вдали от источников огня, контролировать срок хранения.",
+    "ppe": ["gloves", "goggles", "fume_hood"]
+  },
+  {
+    "name": "1,4-диоксан",
+    "synonyms": ["dioxane", "1,4-dioxane"],
+    "hazard_level": "high",
+    "hazard_tags": ["flammable", "toxic", "peroxide_forming", "volatile"],
+    "description": "Горючий и токсичный эфирный растворитель, склонный к образованию пероксидов.",
+    "storage": "Хранить герметично вдали от огня, контролировать длительное хранение.",
+    "ppe": ["gloves", "goggles", "fume_hood"]
+  },
+  {
+    "name": "карбонат калия",
+    "synonyms": ["K2CO3", "potassium carbonate"],
+    "hazard_level": "low",
+    "hazard_tags": ["irritant", "dust"],
+    "description": "Низкоопасное неорганическое основание; пыль может раздражать дыхательные пути.",
+    "storage": "Хранить в сухом месте.",
+    "ppe": ["gloves", "goggles"]
+  },
+  {
+    "name": "тетракис(трифенилфосфин)палладий(0)",
+    "synonyms": ["Pd(PPh3)4", "tetrakis(triphenylphosphine)palladium(0)"],
+    "hazard_level": "medium",
+    "hazard_tags": ["air_sensitive", "metal_complex"],
+    "description": "Металлоорганический катализатор, чувствительный к воздуху и загрязнению.",
+    "storage": "Хранить в сухих условиях, желательно под инертной атмосферой.",
+    "ppe": ["gloves", "goggles", "fume_hood"]
+  },
+  {
+    "name": "хлорид алюминия",
+    "synonyms": ["AlCl3", "aluminium chloride", "aluminum chloride"],
+    "hazard_level": "high",
+    "hazard_tags": ["corrosive", "moisture_sensitive", "reactive_with_water"],
+    "description": "Коррозионная кислота Льюиса, активно реагирует с влагой.",
+    "storage": "Хранить в сухих условиях, избегать контакта с влагой.",
+    "ppe": ["gloves", "goggles", "fume_hood"]
+  },
+  {
+    "name": "бензол",
+    "synonyms": ["benzene"],
+    "hazard_level": "high",
+    "hazard_tags": ["carcinogenic", "flammable", "toxic"],
+    "description": "Канцерогенный и горючий ароматический растворитель.",
+    "storage": "Хранить в шкафу для ЛВЖ вдали от источников огня.",
+    "ppe": ["gloves", "goggles", "fume_hood"]
+  },
+  {
+    "name": "алкилгалогенид",
+    "synonyms": ["alkyl halide", "haloalkane"],
+    "hazard_level": "medium",
+    "hazard_tags": ["irritant", "toxic", "volatile"],
+    "description": "Класс электрофильных субстратов; многие представители токсичны и летучи.",
+    "storage": "Хранить по требованиям конкретного соединения.",
+    "ppe": ["gloves", "goggles", "fume_hood"]
+  },
+  {
+    "name": "бороновая кислота",
+    "synonyms": ["boronic acid"],
+    "hazard_level": "low",
+    "hazard_tags": ["irritant"],
+    "description": "Обычно низкоопасный партнер в Suzuki coupling, возможен раздражающий эффект.",
+    "storage": "Хранить в сухом месте.",
+    "ppe": ["gloves", "goggles"]
+  },
+  {
+    "name": "арилгалогенид",
+    "synonyms": ["aryl halide", "haloarene"],
+    "hazard_level": "medium",
+    "hazard_tags": ["irritant", "compound_dependent"],
+    "description": "Класс ароматических электрофилов; опасность зависит от конкретного соединения.",
+    "storage": "Хранить по требованиям конкретного соединения.",
+    "ppe": ["gloves", "goggles", "fume_hood"]
+  },
+  {
+    "name": "спирт",
+    "synonyms": ["alcohol"],
+    "hazard_level": "medium",
+    "hazard_tags": ["flammable"],
+    "description": "Многие низшие спирты горючи и требуют стандартных мер пожарной безопасности.",
+    "storage": "Хранить вдали от источников огня.",
+    "ppe": ["gloves", "goggles"]
+  },
+  {
+    "name": "карбоновая кислота",
+    "synonyms": ["carboxylic acid"],
+    "hazard_level": "low",
+    "hazard_tags": ["irritant", "compound_dependent"],
+    "description": "Класс субстратов; опасность зависит от конкретной кислоты.",
+    "storage": "Хранить по свойствам конкретного соединения.",
+    "ppe": ["gloves", "goggles"]
+  },
+  {
+    "name": "амин",
+    "synonyms": ["amine"],
+    "hazard_level": "medium",
+    "hazard_tags": ["irritant", "compound_dependent"],
+    "description": "Класс нуклеофильных субстратов; многие амины обладают раздражающим действием.",
+    "storage": "Хранить по свойствам конкретного амина.",
+    "ppe": ["gloves", "goggles", "fume_hood"]
+  },
+  {
+    "name": "Boc-защищенный амин",
+    "synonyms": ["Boc-protected amine", "Boc amine"],
+    "hazard_level": "low",
+    "hazard_tags": ["compound_dependent"],
+    "description": "Защищенный аминный субстрат; основная опасность обычно связана не с ним, а со стадией deprotection.",
+    "storage": "Хранить по свойствам конкретного соединения.",
+    "ppe": ["gloves", "goggles"]
+  },
+  {
+    "name": "метанол",
+    "synonyms": ["methanol"],
+    "hazard_level": "high",
+    "hazard_tags": ["flammable", "toxic", "toxic_inhalation"],
+    "description": "Горючий и токсичный спирт, опасен при проглатывании, вдыхании и контакте.",
+    "storage": "Хранить в шкафу для ЛВЖ вдали от источников огня.",
+    "ppe": ["gloves", "goggles", "fume_hood"]
+  },
+  {
+    "name": "боргидрид натрия",
+    "synonyms": ["sodium borohydride", "NaBH4"],
+    "hazard_level": "high",
+    "hazard_tags": ["reactive_with_water", "hydrogen_release", "reducing_agent"],
+    "description": "Восстановитель, реагирует с водой и кислотами с выделением водорода.",
+    "storage": "Хранить в сухом месте, герметично, вдали от влаги.",
+    "ppe": ["gloves", "goggles", "fume_hood"]
+  },
+  {
+    "name": "гидрид лития алюминия",
+    "synonyms": ["lithium aluminium hydride", "LiAlH4", "LAH"],
+    "hazard_level": "high",
+    "hazard_tags": ["pyrophoric", "highly_reactive", "reactive_with_water", "hydrogen_release"],
+    "description": "Очень реакционноспособный восстановитель, бурно реагирует с влагой, пожароопасен.",
+    "storage": "Хранить в сухих условиях, под инертной атмосферой.",
+    "ppe": ["gloves", "goggles", "face_shield", "fume_hood"]
+  },
+  {
+    "name": "вода",
+    "synonyms": ["water", "H2O"],
+    "hazard_level": "low",
+    "hazard_tags": [],
+    "description": "Низкоопасный компонент, но может вызывать опасные реакции с влагочувствительными реагентами.",
+    "storage": "Стандартные условия хранения.",
+    "ppe": []
   }
 ]

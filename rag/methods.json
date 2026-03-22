@@ -24,8 +24,7 @@
       "использование коррозионных реагентов",
       "требуется нагрев"
     ],
-    "safety_tags": ["corrosive", "exotherm", "heated_process"],
-    "preferred_for_mvp": true
+    "safety_tags": ["corrosive", "exotherm", "heated_process"]
   },
   {
     "target": "ацетилсалициловая кислота",
@@ -51,28 +50,123 @@
       "выделение HCl",
       "токсичные и летучие реагенты"
     ],
-    "safety_tags": ["corrosive", "toxic", "gas_evolution", "flammable"],
-    "preferred_for_mvp": false
+    "safety_tags": ["corrosive", "toxic", "gas_evolution", "flammable"]
   },
   {
-    "reaction": "Suzuki coupling",
-    "conditions": "Pd catalyst, base, solvent, 80C",
-    "yield": "80-95%",
-    "substrates": ["aryl halide", "boronic acid"],
-    "reagents": ["Pd(PPh3)4", "K2CO3", "THF"]
+    "target": "де-Boc-амин",
+    "target_synonyms": ["deprotected amine", "free amine after Boc removal"],
+    "route_id": "boc_route_1",
+    "title": "Снятие Boc-защиты ТФУ в дихлорметане",
+    "starting_materials": ["Boc-защищенный амин"],
+    "reaction_type": "deprotection",
+    "steps": [
+      {
+        "step_id": 1,
+        "description": "Удаление Boc-защиты под действием трифторуксусной кислоты в дихлорметане",
+        "reagents": ["Boc-защищенный амин", "ТФУ", "дихлорметан"],
+        "conditions": ["0-25C", "fume_hood", "30-120 min"]
+      }
+    ],
+    "expected_products": ["де-Boc-амин"],
+    "byproducts": ["CO2", "isobutylene"],
+    "advantages": [
+      "стандартный и широко используемый метод",
+      "обычно высокая конверсия"
+    ],
+    "disadvantages": [
+      "летучая сильная кислота",
+      "токсичный растворитель"
+    ],
+    "safety_tags": ["corrosive", "volatile", "toxic_inhalation"]
   },
   {
-    "reaction": "Friedel-Crafts alkylation",
-    "conditions": "AlCl3 catalyst, room temperature",
-    "yield": "60-80%",
-    "substrates": ["benzene", "alkyl halide"],
-    "reagents": ["AlCl3", "benzene", "alkyl halide"]
+    "target": "эфир",
+    "target_synonyms": ["ester"],
+    "route_id": "esterification_route_1",
+    "title": "Этерификация карбоновой кислоты спиртом в присутствии серной кислоты",
+    "starting_materials": ["карбоновая кислота", "спирт"],
+    "reaction_type": "esterification",
+    "steps": [
+      {
+        "step_id": 1,
+        "description": "Классическая этерификация карбоновой кислоты спиртом при кислотном катализе",
+        "reagents": ["карбоновая кислота", "спирт", "серная кислота"],
+        "conditions": ["reflux", "acid catalyst", "1-4 h"]
+      }
+    ],
+    "expected_products": ["эфир"],
+    "byproducts": ["вода"],
+    "advantages": [
+      "простая постановка реакции",
+      "дешевые исходные вещества"
+    ],
+    "disadvantages": [
+      "нагрев горючей среды",
+      "кислотный катализатор повышает опасность"
+    ],
+    "safety_tags": ["corrosive", "heated_process", "flammable"]
   },
   {
-    "reaction": "Amide coupling",
-    "conditions": "EDC/HOBt or DCC, base, DMF",
-    "yield": "70-90%",
-    "substrates": ["carboxylic acid", "amine"],
-    "reagents": ["EDC", "HOBt", "DIPEA", "DMF"]
+    "target": "амид",
+    "target_synonyms": ["amide", "amide product"],
+    "route_id": "amide_route_1",
+    "title": "Амидное связывание с использованием EDC/HOBt и DIPEA в DMF",
+    "starting_materials": ["карбоновая кислота", "амин"],
+    "reaction_type": "amide_coupling",
+    "steps": [
+      {
+        "step_id": 1,
+        "description": "Образование амидной связи между карбоновой кислотой и амином с карбодиимидной активацией",
+        "reagents": ["карбоновая кислота", "амин", "ЭДК", "ГОБт", "ДИПЭА", "ДМФ"],
+        "conditions": ["0-25C", "dry_conditions", "1-12 h"]
+      }
+    ],
+    "expected_products": ["амид"],
+    "byproducts": ["мочевинные побочные продукты"],
+    "advantages": [
+      "широко применимо в медхимии",
+      "мягкие температурные условия"
+    ],
+    "disadvantages": [
+      "токсичный растворитель",
+      "взрывоопасный риск для сухого HOBt"
+    ],
+    "safety_tags": ["toxic", "energetic_material", "irritant"]
+  },
+  {
+    "target": "биарил",
+    "target_synonyms": ["biaryl"],
+    "route_id": "suzuki_route_1",
+    "title": "Suzuki coupling",
+    "starting_materials": ["арилгалогенид", "бороновая кислота"],
+    "reaction_type": "cross_coupling",
+    "steps": [
+      {
+        "step_id": 1,
+        "description": "Палладий-катализируемое кросс-сочетание",
+        "reagents": ["тетракис(трифенилфосфин)палладий(0)", "карбонат калия", "тетрагидрофуран"],
+        "conditions": ["80C", "inert_atmosphere"]
+      }
+    ],
+    "expected_products": ["биарил"],
+    "safety_tags": ["flammable", "heated_process"]
+  },
+  {
+    "target": "алкилзамещенный ароматический продукт",
+    "target_synonyms": ["friedel-crafts product"],
+    "route_id": "friedel_crafts_route_1",
+    "title": "Friedel-Crafts alkylation",
+    "starting_materials": ["бензол", "алкилгалогенид"],
+    "reaction_type": "friedel_crafts",
+    "steps": [
+      {
+        "step_id": 1,
+        "description": "Алкилирование ароматического ядра",
+        "reagents": ["хлорид алюминия"],
+        "conditions": ["room_temperature", "dry_conditions"]
+      }
+    ],
+    "expected_products": ["алкилзамещенный ароматический продукт"],
+    "safety_tags": ["corrosive", "carcinogenic", "moisture_sensitive"]
   }
 ]
